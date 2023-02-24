@@ -98,6 +98,36 @@
           transform: scale(8);
         }
       }
+      #reset {
+        position: absolute;
+        background-color: transparent;
+        border-radius: 5px;
+        border: 2px solid grey;
+        color: grey;
+        cursor: pointer;
+        font-size: 0.5em;
+        padding: 10px 20px;
+        z-index: 2;
+        bottom: 2%;
+        left: 2%;
+      }
+      #mon-bouton {
+        position: absolute;
+        background-color: transparent;
+        border-radius: 5px;
+        border: 2px solid white;
+        color: white;
+        cursor: pointer;
+        font-size: 3em;
+        padding: 10px 20px;
+        z-index: 2;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      #mon-bouton.hide {
+        display: none;
+      }
     </style>
     <!-- -->
     <audio id="alert" src="./audio/gong.ogg"></audio>
@@ -118,9 +148,43 @@
     <div class="circle"></div>
     <div class="circle"></div>
     <div class="circle"></div>
+    <button id="mon-bouton">Start</button>
+    <button id="reset">Reset</button>
 
     <!-- Script -->
     <script>
+      let btn_start = document.getElementById("mon-bouton");
+      let btn_reset = document.getElementById("reset");
+      function reload() {
+        location.reload();
+      }
+      function startCountDown() {
+        btn_start.classList.add("hide");
+        console.log("test");
+        // décompte des secondes
+        var timer = setInterval(function () {
+          countdown--;
+          var hours = Math.floor(countdown / 3600);
+          var minutes = Math.floor((countdown % 3600) / 60);
+          var seconds = countdown % 60;
+          if (seconds < 10) {
+            seconds = "0" + seconds;
+          }
+          if (minutes < 10) {
+            minutes = "0" + minutes;
+          }
+          if (hours < 10) {
+            hours = "0" + hours;
+          }
+          document.getElementById("countdown").innerHTML = hours + ":" + minutes + ":" + seconds;
+          if (countdown < 1) {
+            clearInterval(timer);
+          }
+          console.log(countdown);
+        }, 1000);
+      }
+      btn_start.addEventListener("click", startCountDown, false);
+      btn_reset.addEventListener("click", reload, false);
       var countdown = 5400; // en sec 60 minutes * 60 seconds
 
       // Toutes les 10 minutes un gong
@@ -128,28 +192,6 @@
         document.getElementById("alert").play();
         console.log("gong");
       }, 600000);
-
-      // décompte des secondes
-      var timer = setInterval(function () {
-        countdown--;
-        var hours = Math.floor(countdown / 3600);
-        var minutes = Math.floor((countdown % 3600) / 60);
-        var seconds = countdown % 60;
-        if (seconds < 10) {
-          seconds = "0" + seconds;
-        }
-        if (minutes < 10) {
-          minutes = "0" + minutes;
-        }
-        if (hours < 10) {
-          hours = "0" + hours;
-        }
-        document.getElementById("countdown").innerHTML = hours + ":" + minutes + ":" + seconds;
-        if (countdown < 1) {
-          clearInterval(timer);
-        }
-        console.log(countdown);
-      }, 1000);
 
       // Quand il reste 1 minute, une alerte toutes les 10 secondes
       let bodyElement = document.querySelector("Body");
