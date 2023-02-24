@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Compte à rebours</title>
+    <style>
+      body {
+        background-color: #c70039;
+        position: relative;
+        height: 100vh;
+      }
+
+      body.final {
+        background-color: #ffffff;
+        transition: 0.5s;
+      }
+      #countdown {
+        color: white;
+        font-size: 8rem;
+        position: absolute;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        animation: pulse 2s ease-in-out infinite;
+        z-index: 1;
+      }
+
+      body.final #countdown {
+        color: red;
+        transition: 0.5s;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .circle {
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        animation: expand 4s ease-in-out infinite;
+        z-index: 0;
+        opacity: 0.2;
+        animation-fill-mode: forwards;
+      }
+      .circle:nth-of-type(1) {
+        top: 10%;
+        left: 10%;
+        animation-delay: 0s;
+        border: 2px solid white;
+      }
+      .circle:nth-of-type(2) {
+        top: 70%;
+        right: 30%;
+        animation-delay: 1s;
+        border: 2px solid white;
+      }
+      .circle:nth-of-type(3) {
+        top: 30%;
+        left: 78%;
+        animation-delay: 2s;
+        border: 2px solid white;
+      }
+      .circle:nth-of-type(4) {
+        top: 90%;
+        left: 70%;
+        animation-delay: 3s;
+        border: 2px solid white;
+      }
+      .circle:nth-of-type(5) {
+        bottom: 30%;
+        right: 90%;
+        animation-delay: 4s;
+        border: 2px solid white;
+      }
+      .circle:nth-of-type(6) {
+        bottom: 15%;
+        right: 45%;
+        animation-delay: 5s;
+        border: 5px solid white;
+      }
+      /* additional circles can be added using the same pattern */
+      @keyframes expand {
+        0% {
+          transform: scale(0);
+        }
+        100% {
+          transform: scale(8);
+        }
+      }
+    </style>
+    <!-- -->
+    <audio id="alert" src="./audio/gong.ogg"></audio>
+    <audio id="alert2" src="./audio/buzz.ogg"></audio>
+  </head>
+  <body>
+    <audio controls style="display: none">
+      <source src="gong.ogg" type="audio/ogg" />
+    </audio>
+    <audio controls style="display: none">
+      <source src="buzz.ogg" type="audio/ogg" />
+    </audio>
+
+    <div id="countdown"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+
+    <!-- Script -->
+    <script>
+      var countdown = 5400; // en sec 60 minutes * 60 seconds
+
+      // Toutes les 10 minutes un gong
+      setInterval(function () {
+        document.getElementById("alert").play();
+        console.log("gong");
+      }, 600000);
+
+      // décompte des secondes
+      var timer = setInterval(function () {
+        countdown--;
+        var hours = Math.floor(countdown / 3600);
+        var minutes = Math.floor((countdown % 3600) / 60);
+        var seconds = countdown % 60;
+        if (seconds < 10) {
+          seconds = "0" + seconds;
+        }
+        if (minutes < 10) {
+          minutes = "0" + minutes;
+        }
+        if (hours < 10) {
+          hours = "0" + hours;
+        }
+        document.getElementById("countdown").innerHTML = hours + ":" + minutes + ":" + seconds;
+        if (countdown < 1) {
+          clearInterval(timer);
+        }
+        console.log(countdown);
+      }, 1000);
+
+      // Quand il reste 1 minute, une alerte toutes les 10 secondes
+      let bodyElement = document.querySelector("Body");
+
+      var finalCountdown = setInterval(function () {
+        if (countdown <= 60) {
+          bodyElement.classList.add("final");
+          console.log(countdown + " secondes");
+          document.getElementById("alert2").play();
+        }
+        if (countdown < 1) {
+          clearInterval(finalCountdown);
+        }
+      }, 10000);
+    </script>
+  </body>
+</html>
